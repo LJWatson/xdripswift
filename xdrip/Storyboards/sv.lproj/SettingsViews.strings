@@ -16,6 +16,10 @@
 "settingsviews_useobjectives" = "Visa målvärde i diagram?";
 "settingsviews_showcoloredobjectives" = "Visa färgade linjer?";
 "settingsviews_showtarget" = "Visa målvärdeslinje?";
+"settingsviews_sectiontitletreatments" = "Behandlingar";
+"settingsviews_showTreatmentsOnChart" = "Visa behandlingar i diagram?";
+"settingsviews_smallBolusTreatmentThreshold" = "Tröskelvärde för mikrobolus:";
+"settingsviews_smallBolusTreatmentThresholdMessage" = "Under vilket värde ska det visas som en mikrobolus?\n\n(Rekommenderat värde: 1,0 IE)";
 "settingsviews_sectiontitlestatistics" = "Statistik";
 "settingsviews_showStatistics" = "Visa statistik?";
 "settingsviews_daysToUseStatisticsTitle" = "Dagar att beräkna?";
@@ -110,6 +114,8 @@
 
 /// general settings, should the online help be translated automatically if needed
 "settingsviews_translateOnlineHelp" = "Translate Automatically?";
+"settingsviews_showHelpIcon" = "Visa hjälpikon?";
+"settingsviews_restartNeeded" = "(Omstart krävs)";
 
 /// home screen settings, should the main glucose chart screen be allowed?
 "settingsviews_allowScreenRotation" = "Allow Chart Rotation?";

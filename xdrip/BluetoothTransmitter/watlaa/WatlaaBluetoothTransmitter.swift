@@ -20,7 +20,7 @@ final class WatlaaBluetoothTransmitter: BluetoothTransmitter {
     let CBUUID_Battery_Service = "0000180F-0000-1000-8000-00805F9B34FB"
     
     /// characteristic uuids (created them in an enum as there's a lot of them, it's easy to switch through the list)
-    private enum CBUUID_Characteristic_UUID:String, CustomStringConvertible, CaseIterable {
+    public enum CBUUID_Characteristic_UUID:String, CustomStringConvertible, CaseIterable {
         
         /// Bridge connection status characteristic
         case CBUUID_BridgeConnectionStatus_Characteristic = "00001012-1212-EFDE-0137-875F45AC0113"
@@ -286,7 +286,7 @@ final class WatlaaBluetoothTransmitter: BluetoothTransmitter {
                     if rxBuffer.count >= 363  {
                         trace("in peripheral didUpdateValueFor, Buffer complete", log: log, category: ConstantsLog.categoryWatlaa, type: .info)
                         
-                        if (Crc.LibreCrc(data: &rxBuffer, headerOffset: miaoMiaoHeaderLength)) {
+                        if (Crc.LibreCrc(data: &rxBuffer, headerOffset: miaoMiaoHeaderLength, libreSensorType: nil)) {
 
                             // get batteryPercentage
                             let batteryPercentage = Int(rxBuffer[13])

@@ -5,6 +5,8 @@
 "settingsviews_master" = "Master";
 "settingsviews_follower" = "Seguidor";
 "settingsviews_translateOnlineHelp" = "Traducir Documentación?";
+"settingsviews_showHelpIcon" = "Mostrar icono?";
+"settingsviews_restartNeeded" = "(Pendiente reiniciar)";
 "settingsviews_showReadingInNotification" = "Mostrar en Notificaciones?";
 "settingsviews_labelShowReadingInAppBadge" = "Mostrar en el icono de la app?";
 "settingsviews_multipleAppBadgeValueWith10" = "Multiplicar valor por 10 en el icono de la app?";
@@ -17,6 +19,10 @@
 "settingsviews_useobjectives" = "Mostrar Objetivos?";
 "settingsviews_showcoloredobjectives" = "Mostrar Colores?";
 "settingsviews_showtarget" = "Mostrar Línea Target?";
+"settingsviews_sectiontitletreatments" = "Tratamientos";
+"settingsviews_showTreatmentsOnChart" = "Mostrar Tratamientos?";
+"settingsviews_smallBolusTreatmentThreshold" = "Límite micro-bolo:";
+"settingsviews_smallBolusTreatmentThresholdMessage" = "Por debajo de cuántas unidades debemos considerar un bolo como micro-bolo?\n\n(Valor recomendado: 1.0U)";
 "settingsviews_sectiontitlestatistics" = "Estadísticas";
 "settingsviews_showStatistics" = "Mostrar Estadísticas?";
 "settingsviews_daysToUseStatisticsTitle" = "Días a Calcular?";

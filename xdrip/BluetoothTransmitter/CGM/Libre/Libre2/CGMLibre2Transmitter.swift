@@ -351,6 +351,14 @@ class CGMLibre2Transmitter:BluetoothTransmitter, CGMTransmitter {
         
     }
     
+    func getCBUUID_Service() -> String {
+        return CBUUID_Service_Libre2
+    }
+    
+    func getCBUUID_Receive() -> String {
+        return CBUUID_ReceiveCharacteristic_Libre2
+    }
+
 }
 
 #else
@@ -381,7 +389,7 @@ extension CGMLibre2Transmitter: LibreNFCDelegate {
             if libreSensorType.decryptIfPossibleAndNeeded(rxBuffer: &framCopy, headerLength: 0, log: log, patchInfo: patchInfo.hexEncodedString().uppercased(), uid: sensorUID.bytes) {
                 
                 // we have all date to create libre1DerivedAlgorithmParameters
-                UserDefaults.standard.libre1DerivedAlgorithmParameters = Libre1DerivedAlgorithmParameters(bytes: framCopy, serialNumber: serialNumber)
+                UserDefaults.standard.libre1DerivedAlgorithmParameters = Libre1DerivedAlgorithmParameters(bytes: framCopy, serialNumber: serialNumber, libreSensorType: libreSensorType)
                 
             }
             

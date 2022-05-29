@@ -1,0 +1,21 @@
+"high" = "yüksek";
+"low" = "Düşük";
+"currentglucose" = "Şu andaki kan şekeriniz";
+"trendnoncomputable" = "belirlenemez";
+/// çok hızlı düşüyor
+"trenddoubledown" = "aşırı ölçüde aşağı";
+/// hızlı düşüyor
+"trendsingledown" = "önemli ölçüde aşağı";
+/// aşağı
+"trendfortyfivedown" = "azalmakta";
+/// düz
+"trendflat" = "sabit";
+/// yukarı
+"trendfortyfiveup" = "artmakta";
+/// önemli ölçüde yukarı
+"trendsingleup" = "hızlı yükseliyor";
+/// aşırı ölçüde yukarı
+"trenddoubleup" = "çok hızlı yükseliyor";
+"currenttrend" = "Doğru bir eğilim gösteriyor.";
+"deltanoncomputable" = "belirlenemez";
+"currentdelta" = "Son değere göre farkı";

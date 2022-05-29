@@ -10,6 +10,10 @@
 "settingsviews_labelShowReadingInAppBadge" = "Afficher Glyc dans le badge?";
 "settingsviews_multipleAppBadgeValueWith10" = "Multiplier par 10 dans le badge?";
 "settingsviews_showClockWhenScreenIsLocked" = "Visualiser l'heure sur écran verrouillé?";
+"settingsviews_sectiontitletreatments" = "Traitements";
+"settingsviews_showTreatmentsOnChart" = "Visualiser les traitements?";
+"settingsviews_smallBolusTreatmentThreshold" = "Seuil des micro-bolus";
+"settingsviews_smallBolusTreatmentThresholdMessage" = "En dessous de combien d'unités un bolus est considéré micro-bolus?\n\n(Valeur conseillée: 1.0U)";
 "settingsviews_sectiontitlestatistics" = "Statistiques";
 "settingsviews_showStatistics" = "Visualiser les statistiques?";
 "settingsviews_daysToUseStatisticsTitle" = "Nombre de jours?";
@@ -154,19 +158,21 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /// general settings, should the online help be translated automatically if needed
-"settingsviews_translateOnlineHelp" = "Translate Automatically?";
+"settingsviews_translateOnlineHelp" = "Traduire automatiquement?";
+"settingsviews_showHelpIcon" = "Afficher l'icône d'aide?";
+"settingsviews_restartNeeded" = "(Redémarrage requis)";
 
 /// home screen settings, should the main glucose chart screen be allowed?
-"settingsviews_allowScreenRotation" = "Allow Chart Rotation?";
+"settingsviews_allowScreenRotation" = "Autoriser la rotation du graphique?";
 
 /// help settings, section title
-"settingsviews_sectiontitlehelp" = "Help & Documentation";
+"settingsviews_sectiontitlehelp" = "Aide et documentation";
 
 /// Calendar Events Settings - section title
 "calendarEventsSectionTitle" = "Calendar Events";
 
 /// help settings, open the online help
-"settingsviews_showOnlineHelp" = "Open Online Help?";
+"settingsviews_showOnlineHelp" = "Ouvrir l'aide en ligne?";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////   Translation needed - remove this header after translation                       /////

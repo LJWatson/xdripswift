@@ -35,6 +35,9 @@ final class SettingsViewController: UIViewController {
         ///Home Screen settings - urgent high, high, target, low and urgent low values for guidelines
         case homescreen
         
+        /// treatments settings
+        case treatments
+        
         /// statistics settings
         case statistics
         
@@ -80,6 +83,8 @@ final class SettingsViewController: UIViewController {
                 return SettingsViewGeneralSettingsViewModel(coreDataManager: coreDataManager)
             case .homescreen:
                 return SettingsViewHomeScreenSettingsViewModel()
+            case .treatments:
+                return SettingsViewTreatmentsSettingsViewModel()
             case .statistics:
                 return SettingsViewStatisticsSettingsViewModel()
             case .sensorCountdown:
@@ -164,11 +169,14 @@ final class SettingsViewController: UIViewController {
             // store self as uiViewController in the viewModel
             viewModel.storeUIViewController(uIViewController: self)
             
-            // store reload closure in the viewModel
+            // store row reload closure in the viewModel
             viewModel.storeRowReloadClosure(rowReloadClosure: {row in
-                
                 self.tableView.reloadRows(at: [IndexPath(row: row, section: section.rawValue)], with: .none)
-                    
+            })
+          
+            // store section reload closure in the viewModel
+            viewModel.storeSectionReloadClosure(sectionReloadClosure: { [weak self] in
+                self?.tableView.reloadSections([section.rawValue], with: .none)
             })
 
             // store the viewModel

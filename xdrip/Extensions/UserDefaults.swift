@@ -19,14 +19,19 @@ extension UserDefaults {
     public enum Key: String {
         // User configurable Settings
         
+        // Online Help
+        
+        /// should the online help by automatically translated?
+        case translateOnlineHelp = "translateOnlineHelp"
+        /// should the main screen help icon be shown?
+        case showHelpIcon = "showHelpIcon"
+        
         // General
         
         /// bloodglucose unit
         case bloodGlucoseUnitIsMgDl = "bloodGlucoseUnit"
         /// urgent high value
         case isMaster = "isMaster"
-        /// should the online help by automatically translated?
-        case translateOnlineHelp = "translateOnlineHelp"
         /// should notification be shown with reading yes or no
         case showReadingInNotification = "showReadingInNotification"
         /// should readings be shown in app badge yes or no
@@ -56,6 +61,14 @@ extension UserDefaults {
         case showTarget = "showTarget"
         /// target value
         case targetMarkValue = "targetMarkValue"
+        
+        // Treatment settings
+        
+        /// should the treatments be shown on the main chart?
+        case showTreatmentsOnChart = "showTreatmentsOnChart"
+        
+        /// micro-bolus threshold level in units
+        case smallBolusTreatmentThreshold = "smallBolusTreatmentThreshold"
         
         // Statistics settings
         
@@ -102,7 +115,16 @@ extension UserDefaults {
         case nightScoutPort = "nightScoutPort"
         /// token to use for authentication, 0 means not set
         case nightscoutToken = "nightscoutToken"
+        
+        /// is a  nightscout sync of treatments required
+        ///
+        /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightScoutUploadManager and when set to true, the manager knows a new sync is required
+        case nightScoutSyncTreatmentsRequired = "nightScoutSyncTreatmentsRequired"
 
+        /// used to trigger view controllers that there's a change in TreatmentEntries
+        ///
+        /// value will be increased with 1 each time there's an update
+        case nightScoutTreatmentsUpdateCounter = "nightScoutTreatmentsUpdateCounter"
         
         // Dexcom Share
         
@@ -302,6 +324,30 @@ extension UserDefaults {
     
     // MARK: - =====  User Configurable Settings ======
     
+    // MARK: Help
+    
+    /// should the app automatically show the translated version of the online help if English (en) is not the selected app locale?
+    @objc dynamic var translateOnlineHelp: Bool {
+        // default value for bool in userdefaults is false, as default we want the app to translate automatically
+        get {
+            return !bool(forKey: Key.translateOnlineHelp.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.translateOnlineHelp.rawValue)
+        }
+    }
+    
+    /// should the app show the help icon on the main screen toolbar?
+    @objc dynamic var showHelpIcon: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to show the help icon in the toolbar
+        get {
+            return !bool(forKey: Key.showHelpIcon.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showHelpIcon.rawValue)
+        }
+    }
+    
     // MARK: General
     
     /// true if unit is mgdl, false if mmol is used
@@ -327,17 +373,6 @@ extension UserDefaults {
         }
         set {
             set(!newValue, forKey: Key.isMaster.rawValue)
-        }
-    }
-    
-    /// should the app automatically show the translated version of the online help if English (en) is not the selected app locale?
-    @objc dynamic var translateOnlineHelp: Bool {
-        // default value for bool in userdefaults is false, as default we want the app to translate automatically
-        get {
-            return !bool(forKey: Key.translateOnlineHelp.rawValue)
-        }
-        set {
-            set(!newValue, forKey: Key.translateOnlineHelp.rawValue)
         }
     }
     
@@ -684,6 +719,39 @@ extension UserDefaults {
         }
     }
     
+    
+    // MARK: Treatments Settings
+    
+    /// should the app show the treatments on the main chart?
+    @objc dynamic var showTreatmentsOnChart: Bool {
+        // default value for bool in userdefaults is false, as default we want the app to show the treatments on the chart
+        get {
+            return !bool(forKey: Key.showTreatmentsOnChart.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showTreatmentsOnChart.rawValue)
+        }
+    }
+    
+    /// micro-bolus threshold level in units as a Double
+    @objc dynamic var smallBolusTreatmentThreshold:Double {
+        get {
+
+            var returnValue = double(forKey: Key.smallBolusTreatmentThreshold.rawValue)
+            // if 0 set to defaultvalue
+            if returnValue == 0.0 {
+                returnValue = ConstantsGlucoseChart.defaultSmallBolusTreamentThreshold
+            }
+
+            return returnValue
+        }
+        set {
+
+            set(newValue, forKey: Key.smallBolusTreatmentThreshold.rawValue)
+        }
+    }
+    
+    
     // MARK: Statistics Settings
     
     
@@ -869,6 +937,30 @@ extension UserDefaults {
         }
     }
     
+    /// is a  nightscout sync of treatments required
+    ///
+    /// will be set to true in viewcontroller when a treatment is created, modified or deleted. The value will be observed by NightScoutUploadManager and when set to true, the manager knows a new sync is required
+    @objc dynamic var nightScoutSyncTreatmentsRequired: Bool {
+        get {
+            return bool(forKey: Key.nightScoutSyncTreatmentsRequired.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.nightScoutSyncTreatmentsRequired.rawValue)
+        }
+    }
+    
+    /// used to trigger view controllers that there's a change in TreatmentEntries
+    ///
+    /// value will be increased with 1 each time there's an update
+    @objc dynamic var nightScoutTreatmentsUpdateCounter: Int {
+        get {
+            return integer(forKey: Key.nightScoutTreatmentsUpdateCounter.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.nightScoutTreatmentsUpdateCounter.rawValue)
+        }
+    }
+
     // MARK: Dexcom Share Settings
     
     /// should readings be uploaded to Dexcom share server, true or false
