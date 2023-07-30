@@ -11,6 +11,20 @@ fileprivate enum Setting:Int, CaseIterable {
     /// case smooth libre values
     case smoothLibreValues = 2
     
+    /// for Libre 2 only, to suppress that app sends unlock payload to Libre 2, in which case xDrip4iOS can run in parallel with other app(s)
+    case suppressUnLockPayLoad = 3
+
+    /// if true, then readings will not be written to shared user defaults (for loop)
+    case suppressLoopShare = 4
+    
+    /// if true, then readings will only be written to shared user defaults (for loop) every 5 minutes (>4.5 mins to be exact)
+    case shareToLoopOnceEvery5Minutes = 5
+    
+    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+    ///
+    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+    case loopDelay = 6
+    
 }
 
 struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
@@ -42,6 +56,18 @@ struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
         case .smoothLibreValues:
             return Texts_SettingsView.smoothLibreValues
             
+        case .suppressUnLockPayLoad:
+            return Texts_SettingsView.suppressUnLockPayLoad
+            
+        case .suppressLoopShare:
+            return Texts_SettingsView.suppressLoopShare
+            
+        case .shareToLoopOnceEvery5Minutes:
+            return Texts_SettingsView.shareToLoopOnceEvery5Minutes
+            
+        case .loopDelay:
+            return Texts_SettingsView.loopDelaysScreenTitle
+            
         }
     }
     
@@ -51,8 +77,11 @@ struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
         
         switch setting {
             
-        case .NSLogEnabled, .OSLogEnabled, .smoothLibreValues:
+        case .NSLogEnabled, .OSLogEnabled, .smoothLibreValues, .suppressUnLockPayLoad, .shareToLoopOnceEvery5Minutes, .suppressLoopShare:
             return UITableViewCell.AccessoryType.none
+            
+        case .loopDelay:
+            return UITableViewCell.AccessoryType.disclosureIndicator
             
         }
     }
@@ -63,13 +92,7 @@ struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
         
         switch setting {
             
-        case .NSLogEnabled:
-            return nil
-            
-        case .OSLogEnabled:
-            return nil
-            
-        case .smoothLibreValues:
+        case .NSLogEnabled, .OSLogEnabled, .smoothLibreValues, .suppressUnLockPayLoad, .suppressLoopShare, .shareToLoopOnceEvery5Minutes, .loopDelay:
             return nil
             
         }
@@ -106,6 +129,33 @@ struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
                 
             })
 
+        case .suppressUnLockPayLoad:
+            return UISwitch(isOn: UserDefaults.standard.suppressUnLockPayLoad, action: {
+                (isOn:Bool) in
+                
+                UserDefaults.standard.suppressUnLockPayLoad = isOn
+                
+            })
+            
+        case .suppressLoopShare:
+            return UISwitch(isOn: UserDefaults.standard.suppressLoopShare, action: {
+                (isOn:Bool) in
+                
+                UserDefaults.standard.suppressLoopShare = isOn
+                
+            })
+            
+        case .shareToLoopOnceEvery5Minutes:
+            return UISwitch(isOn: UserDefaults.standard.shareToLoopOnceEvery5Minutes, action: {
+                (isOn:Bool) in
+                
+                UserDefaults.standard.shareToLoopOnceEvery5Minutes = isOn
+                
+            })
+            
+        case .loopDelay:
+            return nil
+            
         }
         
     }
@@ -120,9 +170,13 @@ struct SettingsViewDevelopmentSettingsViewModel:SettingsViewModelProtocol {
         
         switch setting {
             
-        case .NSLogEnabled, .OSLogEnabled, .smoothLibreValues:
+        case .NSLogEnabled, .OSLogEnabled, .smoothLibreValues, .suppressUnLockPayLoad, .shareToLoopOnceEvery5Minutes, .suppressLoopShare:
             return .nothing
             
+        case .loopDelay:
+            return .performSegue(withIdentifier: SettingsViewController.SegueIdentifiers.settingsToLoopDelaySchedule.rawValue, sender: self)
+            
+
         }
     }
     

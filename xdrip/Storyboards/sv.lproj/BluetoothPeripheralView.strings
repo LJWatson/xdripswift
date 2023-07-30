@@ -1,16 +1,16 @@
-"address" = "Address:";
-"status" = "Status:";
+"address" = "Address";
+"status" = "Status";
 "connected" = "Ansluten";
 "notConnected" = "Inte ansluten";
 "donotconnect" = "Stoppa scanning";
 "selectAliasText" = "Välj ett alias för denna bluetooth-enhet. Namnet kommer att visas i appen och blir lättare för dig att känna igen";
 "aliasAlreadyExists" = "Det finns redan en bluetooth-enhet med detta alias";
 "confirmDeletionPeripheral" = "Vill du ta bort bluetooth-enheten: ";
-"bluetoothPeripheralAlias" = "Alias:";
-"SensorSerialNumber" = "Serienummer:";
-"sensorType" = "Sensortyp:";
-"serialNumber" = "Serienumer:";
-"battery" = "Batteri:";
+"bluetoothPeripheralAlias" = "Alias";
+"SensorSerialNumber" = "Serienummer";
+"sensorType" = "Sensortyp";
+"serialNumber" = "Serienumer";
+"battery" = "Batteri";
 "needsTransmitterId" = "Saknar sändar-ID";
 "scan" = "Scanna";
 "readyToScan" = "Klar att scanna";
@@ -19,10 +19,10 @@
 "tryingToConnect" = "Scannar";
 "notTryingToConnect" = "Scannar inte";
 "connect" = "Anslut";
-"connectedAt" = "Ansluten kl:";
-"disConnectedAt" = "Ifrånkopplad kl:";
+"connectedAt" = "Ansluten kl";
+"disConnectedAt" = "Ifrånkopplad kl";
 "resetRequired" = "Återställ sändare?";
-"lastReset" = "Senaste återställning:";
+"lastReset" = "Senaste återställning";
 "lastResetNotKnown" = "Tidpunkt för senaste återställning ej känd";
 "transmitterResultResult" = "Sändaråterställningsresultat";
 "bootLoader" = "'Bootloader'";
@@ -35,10 +35,24 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Dexcom bluetooth screen. Is another app used in parallel or not
-"useOtherDexcomApp" = "Follow Dexcom-app";
+"useOtherDexcomApp" = "Read from Dexcom app";
 
 /// cell text, sensor start time
-"sensorStartDate" = "Sensor Start";
+"sensorStartDate" = "Sensor Started";
 
 /// cell text, transmitter start time
-"transmittterStartDate" = "Transmitter Start";
+"transmittterStartDate" = "Transmitter Started";
+
+"nfcScanFailedTitle" = "Scanning av sensor misslyckades";
+
+"nfcScanFailedMessage" = "\n⚠️ Försök igen ⚠️";
+
+"nfcScanFailedScanAgainButton" = "Scanna igen";
+
+"nfcScanSuccessfulTitle" = "Sensor scannades!";
+
+"nfcScanSuccessfulMessage" = "\n✅ Scanning lyckades ✅\n\nKlicka OK och vänta på tills sensorn anslutits med bluetooth.\n\nSnart bör status visa 'Ansluten'.";
+
+"nfcErrorMessageScanErrorRetrying" = "Fel vid scanning av sensor\n\nFörsöker igen... # ";
+
+"nfcErrorMessageScanFailed" = "Scanning misslyckades";

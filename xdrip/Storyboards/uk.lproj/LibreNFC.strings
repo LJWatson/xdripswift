@@ -1,0 +1,12 @@
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////   Translation needed - remove this header after translation                       /////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Device must support NFC
+"deviceMustSupportNFC" = "This iPhone does not support NFC";
+/// Device must support at least iOS 14.0
+"deviceMustSupportIOS14" = "To connect to Libre 2, this iPhone needs upgrading to iOS14";
+
+/// Sometimes NFC scanning creates errors, retrying solves the problem. This is to explain this to the user
+"nfcErrorRetryScan" = "Error occured while scanning the sensor. Click 'Scan' top left or click 'back' and add the Libre 2 again, and scan again.";

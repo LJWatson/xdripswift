@@ -1,16 +1,16 @@
-"address" = "Endereço:";
-"status" = "Estado:";
+"address" = "Endereço";
+"status" = "Estado";
 "connected" = "Conectado";
 "notConnected" = "Desconectado";
 "donotconnect" = "Parar a Procura";
 "selectAliasText" = "Escolha um pseudónimo para este dispositivo bluetooth, o nome será mostrado na app e será mais fácil de o reconhecer";
 "aliasAlreadyExists" = "Já existe um dispositivo bluetooth com este pseudónimo";
 "confirmDeletionPeripheral" = "Deseja eliminar este dispositivo bluetooth: ";
-"bluetoothPeripheralAlias" = "Pseudónimo:";
-"SensorSerialNumber" = "Nº. de Série:";
-"sensorType" = "Tipo de Sensor:";
-"serialNumber" = "Número de Série:";
-"battery" = "Bateria:";
+"bluetoothPeripheralAlias" = "Pseudónimo";
+"SensorSerialNumber" = "Nº. de Série";
+"sensorType" = "Tipo de Sensor";
+"serialNumber" = "Número de Série";
+"battery" = "Bateria";
 "needsTransmitterId" = "Em falta ID do Transmissor";
 "scan" = "Pesquisar";
 "readyToScan" = "Pronto a Pesquisar";
@@ -19,10 +19,10 @@
 "tryingToConnect" = "A Pesquisar";
 "notTryingToConnect" = "Não está a Pesquisar";
 "connect" = "Conectar";
-"connectedAt" = "Conectado a:";
-"disConnectedAt" = "Desconectado a:";
+"connectedAt" = "Conectado a";
+"disConnectedAt" = "Desconectado a";
 "resetRequired" = "Reiniciar Transmissor?";
-"lastReset" = "Último Reinício:";
+"lastReset" = "Último Reinício";
 "lastResetNotKnown" = "Registo Desconhecido do Último Reinício";
 "transmitterResultResult" = "Resultado do Reinício do Transmissor";
 "bootLoader" = "Bootloader";
@@ -35,10 +35,24 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Dexcom bluetooth screen. Is another app used in parallel or not
-"useOtherDexcomApp" = "Follow Dexcom-app";
+"useOtherDexcomApp" = "Read from Dexcom app";
 
 /// cell text, sensor start time
-"sensorStartDate" = "Sensor Start";
+"sensorStartDate" = "Sensor Started";
 
 /// cell text, transmitter start time
-"transmittterStartDate" = "Transmitter Start";
+"transmittterStartDate" = "Transmitter Started";
+
+"nfcScanFailedTitle" = "Pesquisa de Sensor Falhou";
+
+"nfcScanFailedMessage" = "\n⚠️ Por favor, Pesquise Novamente ⚠️";
+
+"nfcScanFailedScanAgainButton" = "Pesquisar Novamente";
+
+"nfcScanSuccessfulTitle" = "Pesquisa de Sensor Com Sucesso!";
+
+"nfcScanSuccessfulMessage" = "\n✅ Pesquisa com Sucesso ✅\n\nPressione OK and e espere para permitir o sensor ligar por bluetooth.\n\nEm breve o estado deverá ser alterado para 'Conectado'.";
+
+"nfcErrorMessageScanErrorRetrying" = "Erro na Pesquisa de Sensor\n\nA tentar... # ";
+
+"nfcErrorMessageScanFailed" = "Pesquisa de Sensor Falhou";

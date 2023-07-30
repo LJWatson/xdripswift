@@ -65,6 +65,9 @@ final class SettingsViewController: UIViewController {
         /// Apple Watch settings
         case AppleWatch
         
+        /// housekeeper settings
+        case housekeeper
+        
         /// tracing
         case trace
         
@@ -101,14 +104,16 @@ final class SettingsViewController: UIViewController {
                 return SettingsViewSpeakSettingsViewModel()
             case .M5stack:
                 return SettingsViewM5StackSettingsViewModel()
-            case .info:
-                return SettingsViewInfoViewModel()
             case .developer:
                 return SettingsViewDevelopmentSettingsViewModel()
             case .AppleWatch:
                 return SettingsViewAppleWatchSettingsViewModel()
+            case .housekeeper:
+                return SettingsViewHousekeeperSettingsViewModel(coreDataManager: coreDataManager)
             case .trace:
                 return SettingsViewTraceSettingsViewModel()
+            case .info:
+                return SettingsViewInfoViewModel()
                 
             }
         }
@@ -116,7 +121,7 @@ final class SettingsViewController: UIViewController {
     }
     
 
-    // MARK:- public functions
+    // MARK: - public functions
     
     /// configure
     public func configure(coreDataManager:CoreDataManager?, soundPlayer:SoundPlayer?) {
@@ -228,7 +233,11 @@ final class SettingsViewController: UIViewController {
             if let vc = segue.destination as? TimeScheduleViewController, let sender = sender as? TimeSchedule {
                 vc.configure(timeSchedule: sender)
             }
-            
+
+        case .settingsToLoopDelaySchedule:
+            //nothing to configure
+            break
+
         }
     }
 
@@ -333,6 +342,9 @@ extension SettingsViewController {
         
         /// to go from general settings to schedule screen
         case settingsToSchedule = "settingsToSchedule"
+        
+        /// to go from general settings to loop delay schedule
+        case settingsToLoopDelaySchedule = "settingsToLoopDelaySchedule"
         
     }
 }

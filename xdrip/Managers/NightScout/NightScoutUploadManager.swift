@@ -104,6 +104,7 @@ public class NightScoutUploadManager: NSObject {
         // and nightScoutUrl exists
         guard UserDefaults.standard.nightScoutEnabled, UserDefaults.standard.nightScoutUrl != nil else {return}
 
+        // TODO: crash here
         trace("    setting nightScoutSyncTreatmentsRequired to true, this will also initiate a treatments sync", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info)
         UserDefaults.standard.nightScoutSyncTreatmentsRequired = true
         
@@ -162,6 +163,16 @@ public class NightScoutUploadManager: NSObject {
         // check that NightScout is enabled
         // and nightScoutUrl exists
         guard UserDefaults.standard.nightScoutEnabled, UserDefaults.standard.nightScoutUrl != nil else {return}
+
+        // if schedule is on, check if Nightscout is enabled according to schedule
+        // if app is in foreground then overrule this setting - if the app is in the foreground, then probably it's not the aim to save battery (which is the reason why the schedule is useful) - and if the app is in the foreground, user probably wants to see treatments added by other app (eg Loop), even if nightScout schedule says to not schedule
+        if UserDefaults.standard.nightScoutUseSchedule && !UserDefaults.standard.appInForeGround {
+            if let schedule = UserDefaults.standard.nightScoutSchedule {
+                if !schedule.indicatesOn(forWhen: Date()) {
+                    return
+                }
+            }
+        }
 
         // if sync already running, then set nightScoutTreatmentSyncRequired to true
         // sync is running already, once stopped it will rerun
@@ -395,16 +406,23 @@ public class NightScoutUploadManager: NSObject {
                     }
                     
                 case UserDefaults.Key.nightScoutSyncTreatmentsRequired :
-
-                    // if value is set to true, then a nightscout sync is required
-                    if UserDefaults.standard.nightScoutSyncTreatmentsRequired {
-
+                    
+                    if (keyValueObserverTimeKeeper.verifyKey(forKey: keyPathEnum.rawValue, withMinimumDelayMilliSeconds: 200)) {
+                        
+                        // if nightScoutSyncTreatmentsRequired didn't change to true then no further processing
+                        guard UserDefaults.standard.nightScoutSyncTreatmentsRequired else {return}
+                        
                         UserDefaults.standard.nightScoutSyncTreatmentsRequired = false
-
-                        syncTreatmentsWithNightScout()
-
+                        
+                        // if Nightscout is enabled, then a nightscout sync is required
+                        if UserDefaults.standard.nightScoutEnabled {
+                            
+                            syncTreatmentsWithNightScout()
+                            
+                        }
+                        
                     }
-
+                    
                 default:
                     break
                 }
@@ -508,6 +526,10 @@ public class NightScoutUploadManager: NSObject {
             }
         }
         
+        // add 10 seconds because if Libre with smoothing is used, sometimes the older values reappear but with a slightly different timestamp
+        // this caused readings being uploaded to NS with just a few seconds difference
+        timeStamp = timeStamp.addingTimeInterval(10.0)
+        
         // get latest readings, filter : minimiumTimeBetweenTwoReadingsInMinutes beteen two readings, except for the first if a dis/reconnect occured since the latest reading
         var bgReadingsToUpload = bgReadingsAccessor.getLatestBgReadings(limit: nil, fromDate: timeStamp, forSensor: nil, ignoreRawData: true, ignoreCalculatedValue: false).filter(minimumTimeBetweenTwoReadingsInMinutes: ConstantsNightScout.minimiumTimeBetweenTwoReadingsInMinutes, lastConnectionStatusChangeTimeStamp: lastConnectionStatusChangeTimeStamp, timeStampLastProcessedBgReading: timeStamp)
         
@@ -527,7 +549,7 @@ public class NightScoutUploadManager: NSObject {
             bgReadingsToUpload = bgReadingsToUpload.suffix(ConstantsNightScout.maxReadingsToUpload)
             
             // map readings to dictionaryRepresentation
-            let bgReadingsDictionaryRepresentation = bgReadingsToUpload.map({$0.dictionaryRepresentationForNightScoutUpload})
+            let bgReadingsDictionaryRepresentation = bgReadingsToUpload.map({$0.dictionaryRepresentationForNightScoutUpload()})
             
             // store the timestamp of the last reading to upload, here in the main thread, because we use a bgReading for it, which is retrieved in the main mangedObjectContext
             let timeStampLastReadingToUpload = bgReadingsToUpload.first != nil ? bgReadingsToUpload.first!.timeStamp : nil
@@ -600,6 +622,11 @@ public class NightScoutUploadManager: NSObject {
                     
                 case .Exercise:
                     treatmentToUploadToNightscoutAsDictionary["duration"] = otherTreatmentEntry.value
+                    
+                case .BgCheck:
+                    treatmentToUploadToNightscoutAsDictionary["glucose"] = otherTreatmentEntry.value
+                    treatmentToUploadToNightscoutAsDictionary["units"] = ConstantsNightScout.mgDlNightscoutUnitString
+                    treatmentToUploadToNightscoutAsDictionary["glucoseType"] = "Finger" + String(!UserDefaults.standard.bloodGlucoseUnitIsMgDl ? ": " + otherTreatmentEntry.value.mgdlToMmolAndToString(mgdl: UserDefaults.standard.bloodGlucoseUnitIsMgDl) + " " + Texts_Common.mmol : "")
                     
                 default:
                     break
@@ -708,11 +735,6 @@ public class NightScoutUploadManager: NSObject {
 
         getOrDeleteRequest(path: nightScoutTreatmentPath + "/" + treatmentToDelete.id.split(separator: "-")[0], queries: [], httpMethod: "DELETE", completionHandler: { (data: Data?, nightScoutResult: NightScoutResult)  in
 
-            // trace data to upload as string in debug  mode
-            if let data = data, let dataAsString = String(bytes: data, encoding: .utf8) {
-                trace("    data : %{public}@", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .debug, dataAsString)
-            }
-            
             self.coreDataManager.mainManagedObjectContext.performAndWait {
 
                 if nightScoutResult.successFull() {
@@ -873,6 +895,10 @@ public class NightScoutUploadManager: NSObject {
         // query for treatments older than maxHoursTreatmentsToDownload
         let queries = [URLQueryItem(name: "find[created_at][$gte]", value: String(Date(timeIntervalSinceNow: TimeInterval(hours: -ConstantsNightScout.maxHoursTreatmentsToDownload)).ISOStringFromDate()))]
         
+        /// treatments that are locally stored (and not marked as deleted), and that are not in the list of downloaded treatments will be locally deleted
+        /// - only for latest treatments less than maxHoursTreatmentsToDownload old
+        var didFindTreatmentInDownload = [Bool]( repeating: false, count: treatmentsToSync.count )
+        
         getOrDeleteRequest(path: nightScoutTreatmentPath, queries: queries, httpMethod: nil) { (data: Data?, nightScoutResult: NightScoutResult) in
             
             guard nightScoutResult.successFull() else {
@@ -914,14 +940,34 @@ public class NightScoutUploadManager: NSObject {
                         
                         trace("    %{public}@ treatmentEntries found in response which were not yet marked as uploaded", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info, amountMarkedAsUploaded.description)
 
-                        let amountOfUpdatedTreaments = self.checkIfChangedAtNightscout(forTreatmentEntries: treatmentsToSync, inTreatmentNSResponses: treatmentNSResponses)
+                        let amountOfUpdatedTreaments = self.checkIfChangedAtNightscout(forTreatmentEntries: treatmentsToSync, inTreatmentNSResponses: treatmentNSResponses, didFindTreatmentInDownload: &didFindTreatmentInDownload)
                         
                         trace("    %{public}@ treatmentEntries found that were updated at NS and updated locally", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info, amountOfUpdatedTreaments.description)
                         
+                        // now for each treatmentEntry, less than maxHoursTreatmentsToDownload, check if it was found in the NS response
+                        //    if not, it means it's been deleted at NS, also do the local deletion
+                        //    only treatments that were successfully uploaded before
+                        
+                        // to  keep track of amount of locally deleted treatmentEntries
+                        var amountOfLocallyDeletedTreatments = 0
+                        
+                        for (index, entry) in treatmentsToSync.enumerated() {
+
+                            if abs(entry.date.timeIntervalSinceNow) < ConstantsNightScout.maxHoursTreatmentsToDownload * 3600.0 {
+
+                                if !didFindTreatmentInDownload[index] && !entry.treatmentdeleted && entry.uploaded {
+                                    entry.treatmentdeleted = true
+                                    amountOfLocallyDeletedTreatments = amountOfLocallyDeletedTreatments + 1
+                                }
+                                
+                            }
+                        }
+                        trace("    %{public}@ treatmentEntries that were not found anymore at NS and deleted locally", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info, amountOfLocallyDeletedTreatments.description)
+                        
                         self.coreDataManager.saveChanges()
                         
-                        // call completion handler with success, if amount and/or amountOfNewTreatments > 0 then it's success withlocalchanges
-                        completionHandler(.success(amountOfUpdatedTreaments + amountOfNewTreatments))
+                        // call completion handler with success, if amount and/or amountOfNewTreatments > 0 then it's success with localchanges
+                        completionHandler(.success(amountOfUpdatedTreaments + amountOfNewTreatments + amountOfLocallyDeletedTreatments))
                         
                     }
 
@@ -1042,7 +1088,8 @@ public class NightScoutUploadManager: NSObject {
         
         uploadDataAndGetResponse(dataToUpload: dataToUpload, httpMethod: httpMethod, path: path) { _, nightScoutResult  in
             
-			if let completionHandler = completionHandler {
+            // completion handler to be called only if upload as successful
+            if let completionHandler = completionHandler, nightScoutResult.successFull() {
                 
 				completionHandler()
                 
@@ -1134,6 +1181,9 @@ public class NightScoutUploadManager: NSObject {
                         // error cases
                         if let error = error {
                             trace("    failed to upload, error = %{public}@", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .error, error.localizedDescription)
+                            
+                            nightScoutResult = NightScoutResult.failed
+                            
                             return
                         }
                         
@@ -1173,18 +1223,26 @@ public class NightScoutUploadManager: NSObject {
                                         }
 
                                     } catch {
-                                            // json decode fails, upload will be considered as failed
+                                        // json decode fails, upload will be considered as failed
+                                        nightScoutResult = NightScoutResult.failed
+                                        return
                                     }
                                     
                                 }
                                                             
                                 trace("    failed to upload, statuscode = %{public}@", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .error, response.statusCode.description)
                                 
+                                nightScoutResult = NightScoutResult.failed
+                                
                                 return
                                 
                             }
                         } else {
                             trace("    response is not HTTPURLResponse", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .error)
+                            
+                            nightScoutResult = NightScoutResult.failed
+                            
+                            return
                         }
                         
                         // successful cases
@@ -1214,6 +1272,8 @@ public class NightScoutUploadManager: NSObject {
         } catch let error {
             
             trace("     error : %{public}@", log: self.oslog, category: ConstantsLog.categoryNightScoutUploadManager, type: .info, error.localizedDescription)
+            
+            completionHandler(nil, NightScoutResult.failed)
             
         }
 
@@ -1307,13 +1367,14 @@ public class NightScoutUploadManager: NSObject {
     /// - returns:amount of locally updated treatmentEntries
     ///
     /// - !! does not save to coredata
-    private func checkIfChangedAtNightscout(forTreatmentEntries treatmentEntries: [TreatmentEntry], inTreatmentNSResponses treatmentNSResponses: [TreatmentNSResponse]) -> Int {
+    /// - while the function iterates through treatmentEntries, didFindTreatmentInDownload will be updated and corresponding value will be set to true if a treatment is found at NS
+    private func checkIfChangedAtNightscout(forTreatmentEntries treatmentEntries: [TreatmentEntry], inTreatmentNSResponses treatmentNSResponses: [TreatmentNSResponse], didFindTreatmentInDownload: inout [Bool]) -> Int {
         
         // used to trace how many new treatmenEntries are locally updated
         var amountOfUpdatedTreatmentEntries = 0
         
         // iterate through treatmentEntries
-        for treatmentEntry in treatmentEntries {
+        for (index, treatmentEntry) in treatmentEntries.enumerated() {
             
             // only handle treatmentEntries that are already uploaded
             if treatmentEntry.uploaded && treatmentEntry.id != TreatmentEntry.EmptyId {
@@ -1323,6 +1384,9 @@ public class NightScoutUploadManager: NSObject {
                     // iterate through treatmentEntries
                     // find matching id
                     if treatmentNSResponse.id == treatmentEntry.id {
+                        
+                        // found the treatment in NS response, set didFindTreatmentInDownload to true for that treatment
+                        didFindTreatmentInDownload[index] = true
                         
                         var treatmentUpdated = false
                         

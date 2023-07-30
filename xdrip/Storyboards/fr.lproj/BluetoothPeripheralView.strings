@@ -27,7 +27,7 @@
 "bootLoader" = "Bootloader";
 "cannotActiveCGMInFollowerMode" = "Vous ne pouvez pas activer le capteur en mode Suiveur";
 "cgmDeActivateBecauseMovingToFollowerMode" = "Le capteur a été désactivé en raison d'un passage en mode Suiveur";
-"sensorType" = "Type de capteur:";
+"sensorType" = "Type de capteur";
 "confirmDisconnectTitle" = "Confirmer la déconnexion";
 "confirmDisconnectMessage" = "Sélectionner 'Déconnecter' pour confirmer que vous voulez vraiment déconnecter le transmetteur.";
 
@@ -36,10 +36,24 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Dexcom bluetooth screen. Is another app used in parallel or not
-"useOtherDexcomApp" = "Follow Dexcom-app";
+"useOtherDexcomApp" = "Read from Dexcom app";
 
 /// cell text, sensor start time
-"sensorStartDate" = "Sensor Start";
+"sensorStartDate" = "Sensor Started";
 
 /// cell text, transmitter start time
-"transmittterStartDate" = "Transmitter Start";
+"transmittterStartDate" = "Transmitter Started";
+
+"nfcScanFailedTitle" = "Echec du scan capteur";
+
+"nfcScanFailedMessage" = "\n⚠️ Faire un autre scan ⚠️";
+
+"nfcScanFailedScanAgainButton" = "Faire un autre scan";
+
+"nfcScanSuccessfulTitle" = "Scan du capteur réussi!";
+
+"nfcScanSuccessfulMessage" = "\n✅ Scan réussi ✅\n\nCliquez OK et attendez que le capteur finisse de se connecter par bluetooth.\n\nDans peu de temps l'état devrait passer à 'Connecté'.";
+
+"nfcErrorMessageScanErrorRetrying" = "Erreur de scan capteur\n\nRéessai... # ";
+
+"nfcErrorMessageScanFailed" = "Le scan du capteur a échoué";

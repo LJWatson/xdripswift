@@ -6,13 +6,17 @@ import os
 public enum LibreSensorType: String {
     
     // Libre 1
-    case libre1    = "DF"
+    case libre1 = "DF"
     
-    case libre1A2 =  "A2"
+    case libre1A2 = "A2"
     
-    case libre2    = "9D"
+    case libre2 = "9D"
     
-    case libreUS   = "E5"
+    case libre2C5 = "C5"
+    
+    case libreUS = "E5"
+    
+    case libreUSE6 = "E6"
    
     case libreProH = "70"
     
@@ -29,8 +33,14 @@ public enum LibreSensorType: String {
         case .libre2:
             return "Libre 2"
             
+        case .libre2C5:
+            return "Libre 2 C5"
+            
         case .libreUS:
             return "Libre US"
+            
+        case .libreUSE6:
+            return "Libre US E6"
             
         case .libreProH:
             return "Libre PRO H"
@@ -51,7 +61,7 @@ public enum LibreSensorType: String {
         }
         
         // decrypt if libre2 or libreUS
-        if self == .libre2 || self == .libreUS {
+        if self == .libre2 || self == .libre2C5 || self == .libreUS || self == .libreUSE6 {
             
             var libreData = rxBuffer.subdata(in: headerLength..<(rxBufferEnd + 1))
 
@@ -118,8 +128,14 @@ public enum LibreSensorType: String {
         case "9D":
             return .libre2
             
+        case "C5":
+            return .libre2C5 // new Libre 2 EU type (May 2023)
+            
         case "E5":
             return .libreUS
+            
+        case "E6":
+            return .libreUSE6
             
         case "70":
             return .libreProH
@@ -142,10 +158,10 @@ public enum LibreSensorType: String {
         case .libre1A2:
             return 14
 
-        case .libre2:
+        case .libre2, .libre2C5:
             return 14
 
-        case .libreUS:
+        case .libreUS, .libreUSE6:
             return nil
 
         case .libreProH:

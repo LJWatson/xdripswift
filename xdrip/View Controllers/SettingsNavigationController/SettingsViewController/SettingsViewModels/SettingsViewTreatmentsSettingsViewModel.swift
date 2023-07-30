@@ -18,6 +18,9 @@ fileprivate enum Setting:Int, CaseIterable {
     //should we use the user values for High + Low, or use the standard range?
     case smallBolusTreatmentThreshold = 1
     
+    //should we show the micro-boluses on the main chart?
+    case showSmallBolusTreatmentsOnChart = 2
+    
     
 }
 
@@ -35,6 +38,9 @@ struct SettingsViewTreatmentsSettingsViewModel:SettingsViewModelProtocol {
             
         case .smallBolusTreatmentThreshold:
             return nil
+            
+        case .showSmallBolusTreatmentsOnChart:
+            return UISwitch(isOn: UserDefaults.standard.showSmallBolusTreatmentsOnChart, action: {(isOn:Bool) in UserDefaults.standard.showSmallBolusTreatmentsOnChart = isOn})
             
         }
     }
@@ -73,6 +79,15 @@ struct SettingsViewTreatmentsSettingsViewModel:SettingsViewModelProtocol {
         case .smallBolusTreatmentThreshold:
             return SettingsSelectedRowAction.askText(title: Texts_SettingsView.settingsviews_smallBolusTreatmentThreshold, message: Texts_SettingsView.settingsviews_smallBolusTreatmentThresholdMessage, keyboardType: .decimalPad, text: UserDefaults.standard.smallBolusTreatmentThreshold.description, placeHolder: "0.0", actionTitle: nil, cancelTitle: nil, actionHandler: {(threshold:String) in if let threshold = Double(threshold) {UserDefaults.standard.smallBolusTreatmentThreshold = Double(threshold)}}, cancelHandler: nil, inputValidator: nil)
             
+        case .showSmallBolusTreatmentsOnChart:
+            return SettingsSelectedRowAction.callFunction(function: {
+                if UserDefaults.standard.showSmallBolusTreatmentsOnChart {
+                    UserDefaults.standard.showSmallBolusTreatmentsOnChart = false
+                } else {
+                    UserDefaults.standard.showSmallBolusTreatmentsOnChart = true
+                }
+            })
+            
         }
     }
     
@@ -95,6 +110,9 @@ struct SettingsViewTreatmentsSettingsViewModel:SettingsViewModelProtocol {
         case .smallBolusTreatmentThreshold:
             return Texts_SettingsView.settingsviews_smallBolusTreatmentThreshold
             
+        case .showSmallBolusTreatmentsOnChart:
+            return Texts_SettingsView.settingsviews_showSmallBolusTreatmentsOnChart
+            
         }
     }
     
@@ -103,7 +121,7 @@ struct SettingsViewTreatmentsSettingsViewModel:SettingsViewModelProtocol {
         
         switch setting {
             
-        case .showTreatmentsOnChart:
+        case .showTreatmentsOnChart, .showSmallBolusTreatmentsOnChart:
             return UITableViewCell.AccessoryType.none
             
         case .smallBolusTreatmentThreshold:
@@ -117,7 +135,7 @@ struct SettingsViewTreatmentsSettingsViewModel:SettingsViewModelProtocol {
         
         switch setting {
             
-        case .showTreatmentsOnChart:
+        case .showTreatmentsOnChart, .showSmallBolusTreatmentsOnChart:
             return nil
             
         case .smallBolusTreatmentThreshold:

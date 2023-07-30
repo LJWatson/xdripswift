@@ -38,28 +38,60 @@ extension Date {
         return Date(timeInterval: timeInterval, since: self)
     }
 	
-	/// Given a date represented as a string, returns a Date object, the reverse of ISOStringFromDate.
-    ///
+	/// The same ISO Formtter is used for various conversions, e.g. fromISOString and ISOStringFromDate.
+	/// ISODateFormatter abstracts the creation of this DateFormatter.
+	/// DateFormatter creation is expensive, and having it as a separate func allows reusing.
 	/// Example string: "2022-01-12T23:04:17.190Z"
-	static func fromISOString(_ string: String) -> Date? {
+	static func ISODateFormatter() -> DateFormatter {
 		let dateFormatter = DateFormatter()
 		dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 		dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-		
-		return dateFormatter.date(from: string)
+		return dateFormatter
+	}
+
+	/// Given a date represented as a string, returns a Date object, the reverse of ISOStringFromDate.
+	/// Example string: "2022-01-12T23:04:17.190Z"
+	/// Overloads accepts and uses an optional reuseDateFormatter.
+	static func fromISOString(_ string: String, reuseDateFormatter: DateFormatter? = nil) -> Date? {
+		guard let reuseDateFormatter = reuseDateFormatter else {
+			return Date.ISODateFormatter().date(from: string)
+		}
+		return reuseDateFormatter.date(from: string)
+	}
+	
+	/// Given a date represented as a string, returns a Date object, the reverse of ISOStringFromDate.
+	/// Example string: "2022-01-12T23:04:17.190Z"
+	static func fromISOString(_ string: String) -> Date? {
+		return Date.fromISOString(string, reuseDateFormatter: Date.ISODateFormatter())
+	}
+
+
+	/// Returns the date represented as a ISO string.
+	/// Example return: "2022-01-12T23:04:17.190Z"
+	/// Overloads accepts and uses an optional reuseDateFormatter.
+	func ISOStringFromDate(reuseDateFormatter: DateFormatter? = nil) -> String {
+		guard let reuseDateFormatter = reuseDateFormatter else {
+			return Date.ISODateFormatter().string(from: self)
+		}
+		return reuseDateFormatter.string(from: self)
+	}
+
+	/// Returns the date represented as a ISO string.
+	/// Example return: "2022-01-12T23:04:17.190Z"
+	func ISOStringFromDate() -> String {
+		return self.ISOStringFromDate(reuseDateFormatter: Date.ISODateFormatter())
 	}
     
-	/// Returns the date represented as a ISO string.
+    /// Returns a short date string for use in the filename of the json export file - this should reflect the user's local time
     ///
-	/// Example return: "2022-01-12T23:04:17.190Z"
-    func ISOStringFromDate() -> String {
+    /// Example return: "20220112-2304"
+    func jsonFilenameStringFromDate() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        dateFormatter.dateFormat = "yyyyMMdd-HHmm"
         
-        return dateFormatter.string(from: self).appending("Z")
+        return dateFormatter.string(from: self)
     }
     
     /// date to string, with date and time as specified by one of the values in DateFormatter.Style
@@ -67,6 +99,50 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = timeStyle
         dateFormatter.dateStyle = dateStyle
+        return dateFormatter.string(from: self)
+    }
+    
+    /// date to string, with date and time as specified by one of the values in DateFormatter.Style and formatted to match the user's locale
+    /// Example return: "31/12/2022, 17:48" (spain locale)
+    /// Example return: "12/31/2022, 5:48 pm" (us locale)
+    func toStringInUserLocale(timeStyle: DateFormatter.Style, dateStyle: DateFormatter.Style, showTimeZone: Bool? = false) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = timeStyle
+        dateFormatter.dateStyle = dateStyle
+        dateFormatter.amSymbol = ConstantsUI.timeFormatAM
+        dateFormatter.pmSymbol = ConstantsUI.timeFormatPM
+        
+        let showUserTimeZone = showTimeZone ?? false
+        
+        if timeStyle == .none {
+            
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+            
+        } else if dateStyle == .none {
+            
+            if showUserTimeZone {
+            
+            dateFormatter.setLocalizedDateFormatFromTemplate("jj:mm zzz")
+                
+            } else {
+                
+                dateFormatter.setLocalizedDateFormatFromTemplate("jj:mm")
+                
+            }
+            
+        } else {
+            
+            if showUserTimeZone {
+                
+                dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy, jj:mm zzz")
+                
+            } else {
+                
+                dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy, jj:mm")
+            }
+            
+        }
+        
         return dateFormatter.string(from: self)
     }
     
@@ -80,6 +156,47 @@ extension Date {
     func toLowerHour() -> Date {
         return Date(timeIntervalSinceReferenceDate:
             (timeIntervalSinceReferenceDate / 3600.0).rounded(.down) * 3600.0)
+    }
+    
+    /// returns the Nightscout style string showing the days and hours since a date (e.g. "6d11h")
+    /// Example return: "6d11h" if optional appendAgo is false or not used
+    /// Example return: "6d11h ago" if optional appendAgo is true
+    /// if less than 12 hours, return also minutes, e.g: "7h43m" or "58m" to give extra granularity
+    func daysAndHoursAgo(appendAgo: Bool? = false) -> String {
+        
+        // set a default value assuming that we're unable to calculate the hours + days
+        var daysAndHoursAgoString: String = "n/a"
+
+        let diffComponents = Calendar.current.dateComponents([.day, .hour, .minute], from: self, to: Date())
+
+        if let days = diffComponents.day, let hours = diffComponents.hour, let minutes = diffComponents.minute {
+            
+            if days == 0 && hours < 1 {
+                
+                // show just minutes for less than one hour
+                daysAndHoursAgoString = abs(minutes).description + "m"
+                
+            } else if days == 0 && hours < 12 {
+                
+                // show just hours and minutes for less than twelve hours
+                daysAndHoursAgoString = abs(hours).description + "h" + abs(minutes).description + "m"
+                
+            } else {
+                
+                // default show days and hours
+                daysAndHoursAgoString = abs(days).description + "d" + abs(hours).description + "h"
+                
+            }
+            
+            
+            // if the function was called using appendAgo == true, then add the "ago" string
+            if appendAgo ?? false {
+                daysAndHoursAgoString += " " + Texts_HomeView.ago
+            }
+        }
+
+        return daysAndHoursAgoString
+        
     }
     
 }

@@ -34,7 +34,6 @@
 "transmitterpairingattempttimeout" = "Transmitter reageerde niet op verbindingsverzoek.";
 "success" = "Succes";
 "failed" = "Mislukt";
-"calibrationNotNecessary" = "Indien het Libre algoritme wordt gebruikt is kalibratie van de sensor niet nodig.";
 "dexcomBatteryTooLow" = "Het Transmitter batterijniveau is te laag!";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +44,7 @@
 "stopSensorConfirmation" = "Are you sure you want to stop the sensor?";
 
 /// When user needs to enter sensor code, to start firefly sensor
-"enterSensorCode" = "if you don't have a sensor code use 0000 but be aware that you will not get readings until you calibrate";
+"enterSensorCode" = "If you don't know the sensor code use 0000 but be aware that you will need to manually calibrate before you get readings.";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////   Translation needed - remove this header after translation                       /////
@@ -53,3 +52,5 @@
 
 /// status info : literally 'Sensor End'
 "sensorend" = "Sensor Ends";
+
+"calibrationNotNecessary" = "Indien het Libre algorithme wordt gebruikt is kalibratie van de sensor niet nodig.\n\nIndien je toch wil kalibreren, ga dan naar je CGM in het Bluetooth scherm en schakel 'Gebruik zender algoritme' uit";

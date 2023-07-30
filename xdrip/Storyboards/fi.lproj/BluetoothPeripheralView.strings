@@ -1,16 +1,16 @@
-"address" = "Osoite:";
-"status" = "Tila:";
+"address" = "Osoite";
+"status" = "Tila";
 "connected" = "Yhdistetty";
 "notConnected" = "Ei yhdistetty";
 "donotconnect" = "Lopeta skannaus";
 "selectAliasText" = "Valitse alias tälle bluetooth-laitteelle, nimi näkyy sovelluksessa ja on helpompi tunnistaa";
 "aliasAlreadyExists" = "Tällä aliaksella on jo Bluetooth-laite";
 "confirmDeletionPeripheral" = "Haluatko poistaa Bluetooth-laitteen: ";
-"bluetoothPeripheralAlias" = "Alias:";
-"SensorSerialNumber" = "Sensorin sarjanumero:";
-"sensorType" = "Sensorin tyyppi:";
-"serialNumber" = "Sarjanumero:";
-"battery" = "Akku:";
+"bluetoothPeripheralAlias" = "Alias";
+"SensorSerialNumber" = "Sensorin sarjanumero";
+"sensorType" = "Sensorin tyyppi";
+"serialNumber" = "Sarjanumero";
+"battery" = "Akku";
 "needsTransmitterId" = "Lähettimen tunnus puuttuu";
 "scan" = "Skannaa";
 "readyToScan" = "Valmis skannaamaan";
@@ -19,30 +19,26 @@
 "tryingToConnect" = "Skannaamassa";
 "notTryingToConnect" = "Ei skannausta";
 "connect" = "Yhdistä";
-"connectedAt" = "Yhdistetty osoitteessa:";
-"disConnectedAt" = "Yhteys katkaistu:";
+"connectedAt" = "Yhdistetty osoitteessa";
+"disConnectedAt" = "Yhteys katkaistu";
 "resetRequired" = "Nollaa lähetin?";
-"lastReset" = "Viimeisin nollaus:";
+"lastReset" = "Viimeisin nollaus";
 "lastResetNotKnown" = "Viimeisen nollauksen aikaleima ei ole tiedossa";
 "transmitterResultResult" = "Lähettimen nollaus tulos";
 "bootLoader" = "Käynnistyslatain";
 "cannotActiveCGMInFollowerMode" = "Et voi aktivoida CGM:ää seuraaja-tilassa";
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////   Translation needed - remove this header after translation                       /////
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 /// Dexcom bluetooth screen. Is another app used in parallel or not
-"useOtherDexcomApp" = "Follow Dexcom-app";
+"useOtherDexcomApp" = "Lue Dexcom-sovelluksesta";
 
 /// Disconnect transmitter, title
-"confirmDisconnectTitle" = "Confirm Disconnect";
+"confirmDisconnectTitle" = "Vahvista yhteyden katkaisu";
 
 /// Confirm that the user wants to really disconnect the transmitter, title
-"confirmDisconnectMessage" = "Click 'Disconnect' to confirm that you really want to disconnect from the transmitter.";
+"confirmDisconnectMessage" = "Napsauta 'Katkaise yhteys' vahvistaaksesi, että haluat todella katkaista yhteyden lähettimeen.";
 
 /// cell text, sensor start time
-"sensorStartDate" = "Sensor Start";
+"sensorStartDate" = "Sensorin aloitus";
 
 /// cell text, transmitter start time
-"transmittterStartDate" = "Transmitter Start";
+"transmittterStartDate" = "Lähettimen aloitus";

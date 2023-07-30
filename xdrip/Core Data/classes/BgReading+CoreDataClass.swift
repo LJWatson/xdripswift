@@ -67,22 +67,23 @@ public class BgReading: NSManagedObject {
         return r
     }
     
+    /// returns a string with an arrow representation of the slope
     func slopeArrow() -> String {
         let slope_by_minute = calculatedValueSlope * 60000
         if (slope_by_minute <= (-3.5)) {
-            return "\u{2193}\u{2193}"
+            return "\u{2193}\u{2193}" // ↓↓
         } else if (slope_by_minute <= (-2)) {
-            return "\u{2193}"
+            return "\u{2193}" // ↓
         } else if (slope_by_minute <= (-1)) {
-            return "\u{2198}"
+            return "\u{2198}" // ↘
         } else if (slope_by_minute <= (1)) {
-            return "\u{2192}"
+            return "\u{2192}" // →
         } else if (slope_by_minute <= (2)) {
-            return "\u{2197}"
+            return "\u{2197}" // ↗
         } else if (slope_by_minute <= (3.5)) {
-            return "\u{2191}"
+            return "\u{2191}" // ↑
         } else {
-            return "\u{2191}\u{2191}"
+            return "\u{2191}\u{2191}" // ↑↑
         }
     }
     
@@ -178,15 +179,16 @@ public class BgReading: NSManagedObject {
         if (value > 0) { deltaSign = "+"; }
         
         // quickly check "value" and prevent "-0mg/dl" or "-0.0mmol/l" being displayed
+        // show unitized zero deltas as +0 or +0.0 as per Nightscout format
         if (mgdl) {
             if (value > -1) && (value < 1) {
-                return "0" + (showUnit ? (" " + Texts_Common.mgdl):"");
+                return "+0" + (showUnit ? (" " + Texts_Common.mgdl):"");
             } else {
                 return deltaSign + valueAsString + (showUnit ? (" " + Texts_Common.mgdl):"");
             }
         } else {
             if (value > -0.1) && (value < 0.1) {
-                return "0.0" + (showUnit ? (" " + Texts_Common.mmol):"");
+                return "+0.0" + (showUnit ? (" " + Texts_Common.mmol):"");
             } else {
                 return deltaSign + valueAsString + (showUnit ? (" " + Texts_Common.mmol):"");
             }
@@ -202,6 +204,28 @@ public class BgReading: NSManagedObject {
             return 0.0
         }
 
+    }
+    
+    /// Return the BgRange description/type of the current BgReading value based on the configured objectives
+    func bgRangeDescription() -> BgRangeDescription {
+        
+        // Prepare the bgReading value
+        let bgValue = self.calculatedValue.mgdlToMmol(mgdl: UserDefaults.standard.bloodGlucoseUnitIsMgDl)
+        
+        if (bgValue >= UserDefaults.standard.urgentHighMarkValueInUserChosenUnit
+            || bgValue <= UserDefaults.standard.urgentLowMarkValueInUserChosenUnit){
+            // BG is higher than urgentHigh or lower than urgentLow objectives
+            return BgRangeDescription.urgent
+        }
+        
+        if (bgValue >= UserDefaults.standard.highMarkValueInUserChosenUnit
+            || bgValue <= UserDefaults.standard.lowMarkValueInUserChosenUnit){
+            // BG is between urgentHigh/high and low/urgentLow objectives
+            return BgRangeDescription.notUrgent
+        }
+        
+        // BG is not high or low so considered "in range"
+        return BgRangeDescription.inRange
     }
     
     /// taken over form xdripplus
@@ -225,19 +249,19 @@ public class BgReading: NSManagedObject {
         let slope_by_minute:Double = calculatedValueSlope * 60000
         var arrow = "NONE"
         if (slope_by_minute <= (-3.5)) {
-            arrow = "DoubleDown"
+            arrow = "DoubleDown" // ↓↓
         } else if (slope_by_minute <= (-2)) {
-            arrow = "SingleDown"
+            arrow = "SingleDown" // ↓
         } else if (slope_by_minute <= (-1)) {
-            arrow = "FortyFiveDown"
+            arrow = "FortyFiveDown" // ↘
         } else if (slope_by_minute <= (1)) {
-            arrow = "Flat"
+            arrow = "Flat" // →
         } else if (slope_by_minute <= (2)) {
-            arrow = "FortyFiveUp"
+            arrow = "FortyFiveUp" // ↗
         } else if (slope_by_minute <= (3.5)) {
-            arrow = "SingleUp"
+            arrow = "SingleUp" // ↑
         } else if (slope_by_minute <= (40)) {
-            arrow = "DoubleUp"
+            arrow = "DoubleUp" // ↑↑
         }
         
         if(hideSlope) {

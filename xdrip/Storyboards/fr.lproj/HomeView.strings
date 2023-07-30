@@ -34,7 +34,6 @@
 "transmitterpairingattempttimeout" = "Le transmetteur n'a pas répondu à la demande d'appareillage.";
 "success" = "Réussi";
 "failed" = "Echec";
-"calibrationNotNecessary" = "Avec l'activation d'OOPWeb, la calibration n'est plus nécessaire pour le capteur Libre.";
 "dexcomBatteryTooLow" = "La batterie du transmetteur est trop faible!";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +44,7 @@
 "stopSensorConfirmation" = "Are you sure you want to stop the sensor?";
 
 /// When user needs to enter sensor code, to start firefly sensor
-"enterSensorCode" = "if you don't have a sensor code use 0000 but be aware that you will not get readings until you calibrate";
+"enterSensorCode" = "If you don't know the sensor code use 0000 but be aware that you will need to manually calibrate before you get readings.";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////   Translation needed - remove this header after translation                       /////
@@ -53,3 +52,5 @@
 
 /// status info : literally 'Sensor End'
 "sensorend" = "Sensor Ends";
+
+"calibrationNotNecessary" = "Le menu calibrations manuelles n'est pas disponible si vous utilisez l'algorithme natif.\n\nPour calibrer vous pouvez passer à l'algorithme xDrip dans le menu de l'émetteur.";

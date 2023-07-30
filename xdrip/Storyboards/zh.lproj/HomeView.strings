@@ -56,9 +56,6 @@
 /// Error message in case Dexcom G5 (and G6?) battery is too low. This is deteced by wrong G5 values 2096896
 "dexcomBatteryTooLow" = "The Transmitter battery is too low!";
 
-/// if web oop enabled, and also if transmitter supports this, user clicks calibrate button, but calibration is not possible
-"calibrationNotNecessary" = "When using the Libre algoritm, it is not necessary to calibrate the sensor.";
-
 /// To give result about transitter result in notification body, failed
 "failed" = "Failed";
 
@@ -86,7 +83,7 @@
 "stopSensorConfirmation" = "Are you sure you want to stop the sensor?";
 
 /// When user needs to enter sensor code, to start firefly sensor
-"enterSensorCode" = "if you don't have a sensor code use 0000 but be aware that you will not get readings until you calibrate";
+"enterSensorCode" = "If you don't know the sensor code use 0000 but be aware that you will need to manually calibrate before you get readings.";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////   Translation needed - remove this header after translation                       /////

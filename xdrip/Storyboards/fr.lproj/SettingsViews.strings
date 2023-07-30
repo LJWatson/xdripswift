@@ -60,8 +60,8 @@
 "settingsviews_speakreadingslanguageselection" = "Sélectionner la langue";
 "settingsviews_speakTrend" = "Lire la tendance?";
 "settingsviews_speakDelta" = "Lire la variation?";
-"settingsviews_IntervalTitle" = "Intervalle";
-"settingsviews_IntervalMessage" = "Intervalle minimum entre deux lectures, en minutes";
+"settingsviews_IntervalTitle" = "Intervalle de Notification";
+"settingsviews_IntervalMessage" = "Intervalle minimum entre deux notifications, en minutes";
 "settingsviews_Version" = "Version";
 "settingsviews_license" = "License";
 "settingsviews_build" = "Build";
@@ -87,7 +87,7 @@
 "failedToSendEmail" = "Echec d'envoi du Email";
 
 /// nightscout settings, port to use
-"nightScoutPort" = "Port:";
+"nightScoutPort" = "Port";
 
 /// home screen settings, urgent high value
 "settingsviews_urgentHighValue" = "Urgent Valeur Haute";
@@ -108,7 +108,7 @@
 "settingsviews_urgentLowValue" = "Urgent Valeur Faible";
 
 /// home screen settings, target value
-"settingsviews_targetValue" = "Valeur cible:";
+"settingsviews_targetValue" = "Valeur cible";
 
 /// home screen settings, show target line
 "settingsviews_showtarget" = "Montrer la ligne Cible?";
@@ -183,3 +183,22 @@
 
 /// weboop settings, title of the dialogs where user can select between xdrip or transmitter algorithm
 "settingsviews_labelWebOOP" = "xDrip or Transmitter Algorithm";
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////   Translation needed - remove this header after translation                       /////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Button to export all data
+"settingsviews_housekeeperExportAllData" = "Export All Data";
+
+/// Housekeeper settings, section title
+"settingsviews_sectionTitleHousekeeper" = "Data Management";
+
+/// treatments settings, show the micro-bolus on main chart
+"settingsviews_showSmallBolusTreatmentsOnChart" = "Show Micro-bolus on Chart?";
+
+/// When clicking the retention setting, a pop up asks for how many days should data be stored
+"settingsviews_housekeeperRetentionPeriodMessage" = "For how many days should data be stored? (Min 90, Max 365)\n\n(Recommended: 90 days)";
+
+/// Housekeeper retention period, for how long to store data
+"settingsviews_housekeeperRetentionPeriod" = "Retention Period (days)";

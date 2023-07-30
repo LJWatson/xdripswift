@@ -101,11 +101,11 @@ class Texts_BluetoothPeripheralView {
     }()
     
     static let transmittterStartDate: String = {
-        return NSLocalizedString("transmittterStartDate", tableName: filename, bundle: Bundle.main, value: "Transmitter Start", comment: "cell text, transmitter start time")
+        return NSLocalizedString("transmittterStartDate", tableName: filename, bundle: Bundle.main, value: "Transmitter Started", comment: "cell text, transmitter start time")
     }()
     
     static let sensorStartDate: String = {
-        return NSLocalizedString("sensorStartDate", tableName: filename, bundle: Bundle.main, value: "Sensor Start", comment: "cell text, sensor start time")
+        return NSLocalizedString("sensorStartDate", tableName: filename, bundle: Bundle.main, value: "Sensor Started", comment: "cell text, sensor start time")
     }()
     
     static let lastResetTimeStampNotKnown: String = {
@@ -133,6 +133,19 @@ class Texts_BluetoothPeripheralView {
     }()
     
     static let useOtherDexcomApp: String = {
-        return NSLocalizedString("useOtherDexcomApp", tableName: filename, bundle: Bundle.main, value: "Follow Dexcom-app", comment: "Dexcom bluetooth screen. Is another app used in parallel or not")
+        return NSLocalizedString("useOtherDexcomApp", tableName: filename, bundle: Bundle.main, value: "Read from Dexcom app", comment: "Dexcom bluetooth screen. Is another app used in parallel or not")
     }()
+    
+    static let nfcScanNeeded: String = {
+        return NSLocalizedString("nfcScanNeeded", tableName: filename, bundle: Bundle.main, value: "NFC scan needed", comment: "text in status row, when waiting for a successful NFC scan before starting bluetooth scanning")
+    }()
+    
+    static let nonFixedSlopeWarning: String = {
+        return NSLocalizedString("nonFixedSlopeWarning", tableName: filename, bundle: Bundle.main, value: "Multi-point calibration is an advanced feature.\n\nPlease do not use this feature until you have read the calibration section of the online help and understand how it works.", comment: "text to inform the user that multi-point calibration is an advanced option and could be dangerous if used incorrectly")
+    }()
+    
+    static let warmingUpUntil: String = {
+        return NSLocalizedString("warmingUpUntil", tableName: filename, bundle: Bundle.main, value: "Warming up until", comment: "sensor warm-up text")
+    }()
+    
 }

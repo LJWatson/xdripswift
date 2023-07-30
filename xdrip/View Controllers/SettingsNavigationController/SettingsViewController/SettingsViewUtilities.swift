@@ -100,6 +100,40 @@ class SettingsViewUtilities {
                 
                 // check if refresh is needed, either complete settingsview or individual section
                 self.checkIfReloadNeededAndReloadIfNeeded(tableView: tableView, viewModel: settingsViewModel, rowIndex: rowIndex, sectionIndex: sectionIndex)
+				
+			case let .callFunctionAndShareFile(function):
+				
+				// Start a ProgressBar
+				let progressBar = ProgressBarViewController()
+				progressBar.start(onParent: uIViewController)
+				
+				// call function and in the callback handles updating
+				// the progress bar and presenting the share file menu.
+				// The callback is called multiple times until .complete is true.
+				function({ (progress : ProgressBarStatus<URL>?) in
+					
+					guard let progress = progress else {
+						progressBar.end()
+						return
+					}
+					
+					// update the loading bar
+					// This will destroy the bar if .complete
+					progressBar.update(status: progress)
+					
+					// If URL is not nil and progress is complete, attempt to share the file.
+					if let fileURL = progress.data, progress.complete {
+						DispatchQueue.main.async {
+							// Present the user with a share file menu.
+							let activityViewController = UIActivityViewController(activityItems: [fileURL], applicationActivities: [])
+							uIViewController.present(activityViewController, animated: true)
+						}
+					}
+				})
+				
+				// check if refresh is needed, either complete settingsview or individual section
+				self.checkIfReloadNeededAndReloadIfNeeded(tableView: tableView, viewModel: settingsViewModel, rowIndex: rowIndex, sectionIndex: sectionIndex)
+				
                 
             case let .selectFromList(title, data, selectedRow, actionTitle, cancelTitle, actionHandler, cancelHandler, didSelectRowHandler):
                 

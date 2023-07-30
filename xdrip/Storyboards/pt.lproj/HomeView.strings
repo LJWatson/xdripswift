@@ -30,7 +30,6 @@
 "transmitterpairingattempttimeout" = "Transmissor não respondeu ao pedido de emparelhamento.";
 "success" = "Com Sucesso";
 "failed" = "Falhou";
-"calibrationNotNecessary" = "Quando se usa Algoritmo do Libre, não é necessário calibrar o sensor.";
 "dexcomBatteryTooLow" = "O Nível de Bateria do Transmissor está muito baixo!";
 "unlock" = "Desbloquear";
 "lock" = "Bloquear";
@@ -45,7 +44,7 @@
 "stopSensorConfirmation" = "Are you sure you want to stop the sensor?";
 
 /// When user needs to enter sensor code, to start firefly sensor
-"enterSensorCode" = "if you don't have a sensor code use 0000 but be aware that you will not get readings until you calibrate";
+"enterSensorCode" = "If you don't know the sensor code use 0000 but be aware that you will need to manually calibrate before you get readings.";
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////   Translation needed - remove this header after translation                       /////
@@ -53,3 +52,5 @@
 
 /// status info : literally 'Sensor End'
 "sensorend" = "Sensor Ends";
+
+"calibrationNotNecessary" = "Quando em utilização do algoritmo nativo do transmissor, calibração manual não está disponível.\n\nSe pretende calibrar, terá que alterar para o algoritmo xDrip no menu do transmissor.";

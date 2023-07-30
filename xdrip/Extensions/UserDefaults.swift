@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 extension UserDefaults {
     
@@ -44,6 +45,10 @@ extension UserDefaults {
         // Home Screen and main chart settings
         
         /// should the screen/chart be allowed to rotate?
+        case showMiniChart = "showMiniChart"
+        /// hours to show on the mini-chart?
+        case miniChartHoursToShow = "miniChartHoursToShow"
+        /// should the screen/chart be allowed to rotate?
         case allowScreenRotation = "allowScreenRotation"
         /// should the clock view be shown when the screen is locked?
         case showClockWhenScreenIsLocked = "showClockWhenScreenIsLocked"
@@ -70,6 +75,21 @@ extension UserDefaults {
         /// micro-bolus threshold level in units
         case smallBolusTreatmentThreshold = "smallBolusTreatmentThreshold"
         
+        /// should the micro-boluses be shown on the main chart?
+        case showSmallBolusTreatmentsOnChart = "showSmallBolusTreatmentsOnChart"
+        
+        /// should the micro-boluses be listed in the treatment list/table?
+        case showSmallBolusTreatmentsInList = "showSmallBolusTreatmentsInList"
+        
+        /// should the normal boluses be listed in the treatment list/table?
+        case showBolusTreatmentsInList = "showBolusTreatmentsInList"
+        
+        /// should the carbs be listed in the treatment list/table?
+        case showCarbsTreatmentsInList = "showCarbsTreatmentsInList"
+        
+        /// should the BG Checks be listed in the treatment list/table?
+        case showBgCheckTreatmentsInList = "showBgCheckTreatmentsInList"
+        
         // Statistics settings
         
         /// show the statistics? How many days should we use for the calculations?
@@ -80,6 +100,11 @@ extension UserDefaults {
         case useIFCCA1C = "useIFCCA1C"
         /// use the "standard" range of 70-180mg/dl to calculate the statistics?
         case useStandardStatisticsRange = "useStandardStatisticsRange"
+
+        // Housekeeper settings
+
+        /// For how many days should we keep Readings, Treatments and Calibrations?
+        case retentionPeriodInDays = "retentionPeriodInDays"
         
         // Sensor Countdown settings
         
@@ -222,6 +247,10 @@ extension UserDefaults {
         /// calendar interval
         case calendarInterval = "calendarInterval"
         
+        /// should a visual coloured indicator be shown in the calendar title yes or no
+        case displayVisualIndicatorInCalendarEvent = "displayVisualIndicator"
+        
+        
         // Other Settings (not user configurable)
         
         /// - in case missed reading alert settings are changed by user, this value will be set to true
@@ -262,10 +291,25 @@ extension UserDefaults {
             
         /// timestamp lastest reading shared with Loop
         case timeStampLatestLoopSharedBgReading = "timeStampLatestLoopSharedBgReading"
-            
+        
+        /// Loop sharing will be limited to just once every 5 minutes if true
+        case shareToLoopOnceEvery5Minutes = "shareToLoopOnceEvery5Minutes"
+        
+
         // Trace
         /// should debug level logs be added in trace file or not, and also in NSLog
         case addDebugLevelLogsInTraceFileAndNSLog = "addDebugLevelLogsInTraceFileAndNSLog"
+        
+        // NFC scan handlers
+        /// used to indicate that a Libre 2 NFC pairing scan has failed
+        case nfcScanFailed = "nfcScanFailed"
+        
+        /// used to indicate that a Libre 2 NFC pairing scan has been successful
+        case nfcScanSuccessful = "nfcScanSuccessful"
+        
+        /// used to stop the active sensor if an integrated transmitter/sensor is disconnected (e.g. Libre 2)
+        case stopActiveSensor = "stopActiveSensor"
+        
         
         // non fixed slope values for oop web Libre
         /// web oop parameters, only for bubble, miaomiao and Libre 2
@@ -288,6 +332,19 @@ extension UserDefaults {
         /// case smooth libre values
         case smoothLibreValues = "smoothLibreValues"
         
+        /// for Libre 2 : suppress sending unlockPayLoad, this will allow to run xDrip4iOS/Libre 2 in parallel with other app(s)
+        case suppressUnLockPayLoad = "suppressUnLockPayLoad"
+        
+        /// if true, then readings will not be written to shared user defaults (for loop)
+        case suppressLoopShare = "suppressLoopShare"
+        
+        /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+        ///
+        /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+        case loopDelaySchedule = "loopDelaySchedule"
+        
+        case loopDelayValueInMinutes = "loopDelayValueInMinutes"
+        
         /// used for Libre data parsing - only for Libre 1 or Libre 2 read via transmitter, ie full NFC block
         case previousRawLibreValues = "previousRawLibreValues"
         
@@ -303,6 +360,10 @@ extension UserDefaults {
         /// to merge from 3.x to 4.x, can be deleted once 3.x is not used anymore
         case cgmTransmitterDeviceAddress = "cgmTransmitterDeviceAddress"
         
+        /// will be set to true when UIApplication.willEnterForegroundNotification is triggered. And to false when app goes back to background
+        ///
+        /// Can be used if status needs to be known, app in for or background. UIApplication.shared.applicationState seems to come a bit too late to active, when the app is coming to the foreground, in cases where it's needed, this UserDefaults key can be used
+        case appInForeGround = "appInForeGround"
         
         // Libre
         /// Libre unlock code
@@ -396,6 +457,30 @@ extension UserDefaults {
             set(newValue, forKey: Key.notificationInterval.rawValue)
         }
     }
+    
+    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+    ///
+    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+    @objc dynamic var loopDelaySchedule: String? {
+        get {
+            return string(forKey: Key.loopDelaySchedule.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.loopDelaySchedule.rawValue)
+        }
+    }
+
+    /// to create artificial delay in readings stored in sharedUserDefaults for loop. Minutes - so that Loop receives more smoothed values.
+    ///
+    /// Default value 0, if used then recommended value is multiple of 5 (eg 5 ot 10)
+    @objc dynamic var loopDelayValueInMinutes: String? {
+        get {
+            return string(forKey: Key.loopDelayValueInMinutes.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.loopDelayValueInMinutes.rawValue)
+        }
+    }
 
     /// should reading be shown in app badge yes or no
     @objc dynamic var showReadingInAppBadge: Bool {
@@ -420,6 +505,58 @@ extension UserDefaults {
     }
     
     // MARK: Home Screen Settings
+    
+    /// the amount of hours to show in the mini-chart. Usually 24 hours but can be set to 48 hours by the user
+    @objc dynamic var miniChartHoursToShow: Double {
+        get {
+            let returnValue = double(forKey: Key.miniChartHoursToShow.rawValue)
+            // if 0 set to defaultvalue
+            if returnValue == 0 {
+                set(ConstantsGlucoseChart.miniChartHoursToShow1, forKey: Key.miniChartHoursToShow.rawValue)
+            }
+
+            return returnValue
+        }
+        set {
+            
+            set(newValue, forKey: Key.miniChartHoursToShow.rawValue)
+        }
+    }
+    
+    /// should the mini-chart be shown on the home screen?
+    @objc dynamic var showMiniChart: Bool {
+        
+        get {
+            
+            // check if the showMiniChart key has already been previously set. If so, then just return it
+            if let _ = UserDefaults.standard.object(forKey: "showMiniChart") {
+                
+                return !bool(forKey: Key.showMiniChart.rawValue)
+                
+            } else {
+                
+                // this means that this is the first time setting the showMiniChart key. To to avoid crowding the screen we want to only show the mini-chart by default if the user has display zoom disabled
+                if UIScreen.main.scale < UIScreen.main.nativeScale {
+                    
+                    set(true, forKey: Key.showMiniChart.rawValue)
+                    
+                } else {
+                    
+                    // if not, then hide it by default
+                    
+                    set(false, forKey: Key.showMiniChart.rawValue)
+                    
+                }
+                
+                return !bool(forKey: Key.showMiniChart.rawValue)
+                
+            }
+        }
+        set {
+            
+            set(!newValue, forKey: Key.showMiniChart.rawValue)
+        }
+    }
     
     /// the urgenthighmarkvalue in unit selected by user ie, mgdl or mmol
     @objc dynamic var urgentHighMarkValueInUserChosenUnit:Double {
@@ -751,6 +888,61 @@ extension UserDefaults {
         }
     }
     
+    /// should the app show the micro-bolus treatments on the main chart?
+    @objc dynamic var showSmallBolusTreatmentsOnChart: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to *show* the micro-bolus treatments on the chart
+        get {
+            return !bool(forKey: Key.showSmallBolusTreatmentsOnChart.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showSmallBolusTreatmentsOnChart.rawValue)
+        }
+    }
+    
+    /// should the app show the micro-bolus treatments in the treatments list/table?
+    @objc dynamic var showSmallBolusTreatmentsInList: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to *hide* the micro-bolus treatments in the treatments table
+        get {
+            return bool(forKey: Key.showSmallBolusTreatmentsInList.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.showSmallBolusTreatmentsInList.rawValue)
+        }
+    }
+    
+    /// should the app show the normal bolus treatments in the treatments list/table?
+    @objc dynamic var showBolusTreatmentsInList: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to *show* the normal bolus treatments in the treatments table
+        get {
+            return !bool(forKey: Key.showBolusTreatmentsInList.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showBolusTreatmentsInList.rawValue)
+        }
+    }
+    
+    /// should the app show the normal bolus treatments in the treatments list/table?
+    @objc dynamic var showCarbsTreatmentsInList: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to *show* the normal bolus treatments in the treatments table
+        get {
+            return !bool(forKey: Key.showCarbsTreatmentsInList.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showCarbsTreatmentsInList.rawValue)
+        }
+    }
+    
+    /// should the app show the BG Check treatments in the treatments list/table?
+    @objc dynamic var showBgCheckTreatmentsInList: Bool {
+        // default value for bool in userdefaults is false, by default we want the app to *show* the BG Check treatments in the treatments table
+        get {
+            return !bool(forKey: Key.showBgCheckTreatmentsInList.rawValue)
+        }
+        set {
+            set(!newValue, forKey: Key.showBgCheckTreatmentsInList.rawValue)
+        }
+    }
+    
     
     // MARK: Statistics Settings
     
@@ -759,7 +951,30 @@ extension UserDefaults {
     @objc dynamic var showStatistics: Bool {
         // default value for bool in userdefaults is false, by default we want the statistics view to show (true)
         get {
-            return !bool(forKey: Key.showStatistics.rawValue)
+            
+            // check if the showStatistics key has already been previously set. If so, then just return it
+            if let _ = UserDefaults.standard.object(forKey: "showStatistics") {
+                
+                return !bool(forKey: Key.showStatistics.rawValue)
+                
+            } else {
+                
+                // this means that this is the first time setting the showStatistics key. To to avoid crowding the screen we want to only show the statistics view by default if the user has display zoom disabled
+                if UIScreen.main.scale < UIScreen.main.nativeScale {
+                    
+                    set(true, forKey: Key.showStatistics.rawValue)
+                    
+                } else {
+                    
+                    // if not, then hide it by default
+                    
+                    set(false, forKey: Key.showStatistics.rawValue)
+                    
+                }
+                
+                return !bool(forKey: Key.showStatistics.rawValue)
+                
+            }
         }
         set {
             set(!newValue, forKey: Key.showStatistics.rawValue)
@@ -823,6 +1038,28 @@ extension UserDefaults {
         }
     }
     
+
+    // MARK: Housekeeper Settings
+
+    /// For how many days should data be stored. Should always be <= maximumRetentionPeriodInDays and >= minimumRetentionPeriodInDays.
+    @objc dynamic var retentionPeriodInDays: Int {
+        get {
+            var returnValue = integer(forKey: Key.retentionPeriodInDays.rawValue)
+            // if 0 set to defaultvalue
+            if returnValue == 0 {
+                returnValue = ConstantsHousekeeping.minimumRetentionPeriodInDays
+            }
+
+            return returnValue
+        }
+        set {
+            // Constrains the newValue to be <= than maximumRetentionPeriodInDays and >= than minimumRetentionPeriodInDays.
+            var value = min(newValue, ConstantsHousekeeping.maximumRetentionPeriodInDays)
+            value = max(value, ConstantsHousekeeping.minimumRetentionPeriodInDays)
+
+            set(value, forKey: Key.retentionPeriodInDays.rawValue)
+        }
+    }
     
     // MARK: Transmitter Settings
     
@@ -1282,8 +1519,17 @@ extension UserDefaults {
         }
     }
     
-
+    /// should a visual coloured indicator be shown in the calendar title,  yes or no, default no
+    @objc dynamic var displayVisualIndicatorInCalendarEvent: Bool {
+        get {
+            return bool(forKey: Key.displayVisualIndicatorInCalendarEvent.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.displayVisualIndicatorInCalendarEvent.rawValue)
+        }
+    }
     
+
     // MARK: - =====  Other Settings ======
     
     /// - in case missed reading alert settings are changed by user, this value will be set to true
@@ -1398,6 +1644,7 @@ extension UserDefaults {
         }
     }
     
+    
     // MARK: - =====  Loop Share Settings ======
     
     /// dictionary representation of readings that were shared  with Loop. This is not the json representation, it's an array of dictionary
@@ -1410,13 +1657,23 @@ extension UserDefaults {
         }
     }
 
-    /// timestamp lastest reading uploaded to NightScout
+    /// timestamp lastest reading shared with Loop via App Group
     var timeStampLatestLoopSharedBgReading:Date? {
         get {
             return object(forKey: Key.timeStampLatestLoopSharedBgReading.rawValue) as? Date
         }
         set {
             set(newValue, forKey: Key.timeStampLatestLoopSharedBgReading.rawValue)
+        }
+    }
+    
+    /// Loop sharing will be limited to just once every 5 minutes if true - default false
+    var shareToLoopOnceEvery5Minutes: Bool {
+        get {
+            return bool(forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.shareToLoopOnceEvery5Minutes.rawValue)
         }
     }
     
@@ -1462,6 +1719,26 @@ extension UserDefaults {
         }
     }
     
+    /// for Libre 2 : suppress sending unlockPayLoad, this will allow to run xDrip4iOS/Libre 2 in parallel with other app(s)
+    var suppressUnLockPayLoad: Bool {
+        get {
+            return bool(forKey: Key.suppressUnLockPayLoad.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.suppressUnLockPayLoad.rawValue)
+        }
+    }
+    
+    /// if true, then readings will not be written to shared user defaults (for loop)
+    var suppressLoopShare: Bool {
+        get {
+            return bool(forKey: Key.suppressLoopShare.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.suppressLoopShare.rawValue)
+        }
+    }
+
     /// used for Libre data parsing - for processing in LibreDataParser which is only in case of reading with NFC (ie bubble etc)
     var previousRawLibreValues: [Double] {
         get {
@@ -1539,6 +1816,18 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.addDebugLevelLogsInTraceFileAndNSLog.rawValue)
+        }
+    }
+    
+    /// will be set to true when UIApplication.willEnterForegroundNotification is triggered. And to false when app goes back to background
+    ///
+    /// Can be used if status needs to be known, app in for or background. UIApplication.shared.applicationState seems to come a bit too late to active, when the app is coming to the foreground, in cases where it's needed, this UserDefaults key can be used. Default false
+    var appInForeGround: Bool {
+        get {
+            return bool(forKey: Key.appInForeGround.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.appInForeGround.rawValue)
         }
     }
     
@@ -1621,6 +1910,39 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.librePatchInfo.rawValue)
+        }
+    }
+    
+    /// in case an NFC scan fails, this value will be set to true.
+    /// bluetoothPeripheralViewController will observe this value and if it becomes set to true, it should disconnect the transmitter and offer to scan again
+    @objc dynamic var nfcScanFailed: Bool {
+        get {
+            return bool(forKey: Key.nfcScanFailed.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.nfcScanFailed.rawValue)
+        }
+    }
+    
+    /// in case an NFC completes successfuly, this value will be set to true.
+    /// bluetoothPeripheralViewController will observe this value and if it becomes set to true, it will advise the user and launch BLE scanning from the superclass
+    @objc dynamic var nfcScanSuccessful: Bool {
+        get {
+            return bool(forKey: Key.nfcScanSuccessful.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.nfcScanSuccessful.rawValue)
+        }
+    }
+    
+    /// in case the user disconnects a transmitter with integrated sensor (e.g. Libre 2), this value will be set to true.
+    /// RootViewController will observe this value and if it becomes set to true, it will stop the active sensor session
+    @objc dynamic var stopActiveSensor: Bool {
+        get {
+            return bool(forKey: Key.stopActiveSensor.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.stopActiveSensor.rawValue)
         }
     }
     

@@ -159,6 +159,12 @@ enum ConstantsLog {
 
     /// for use in Libre2BLEUtilities
     static let categoryAppDelegate =                    "AppDelegate              "
+	
+	/// for use in DataExporter
+	static let categoryDataExporter =                           "DataExporter             "
 
+    // for use in LoopManager
+    static let categoryLoopManager =                            "LoopManager              "
+    
 }
 

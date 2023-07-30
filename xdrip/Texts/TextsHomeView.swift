@@ -73,11 +73,19 @@ enum Texts_HomeView {
     }()
    
     static let sensorStart:String = {
-        return NSLocalizedString("sensorstart", tableName: filename, bundle: Bundle.main, value: "Sensor Start", comment: "status info : literally 'Sensor Start'")
+        return NSLocalizedString("sensorstart", tableName: filename, bundle: Bundle.main, value: "Sensor Started", comment: "status info : literally 'Sensor Start'")
+    }()
+    
+    static let sensorDuration:String = {
+        return NSLocalizedString("sensorDuration", tableName: filename, bundle: Bundle.main, value: "Sensor Duration", comment: "status info : literally 'Sensor Duration'")
     }()
 
     static let sensorEnd:String = {
         return NSLocalizedString("sensorend", tableName: filename, bundle: Bundle.main, value: "Sensor End", comment: "status info : literally 'Sensor End'")
+    }()
+    
+    static let sensorRemaining:String = {
+        return NSLocalizedString("sensorRemaining", tableName: filename, bundle: Bundle.main, value: "Sensor Remaining", comment: "status info : literally 'Sensor Remaining'")
     }()
     
     static let notStarted:String = {
@@ -153,7 +161,7 @@ enum Texts_HomeView {
     }()
     
     static let calibrationNotNecessary:String = {
-        return NSLocalizedString("calibrationNotNecessary", tableName: filename, bundle: Bundle.main, value: "With OOPWeb enabled, calibration is not necessary for the Libre sensor.", comment: "if web oop enabled, and also if transmitter supports this, user clicks calibrate button, but calibration is not possible")
+        return NSLocalizedString("calibrationNotNecessary", tableName: filename, bundle: Bundle.main, value: "When using the native transmitter algorithm, manual calibration is not available.\n\nIf you want to calibrate, you can switch to the xDrip algorithm in the transmitter screen.", comment: "if web oop enabled, and also if transmitter supports this, user clicks calibrate button, but calibration is not possible")
     }()
  
     static let dexcomBatteryTooLow: String = {
@@ -161,7 +169,7 @@ enum Texts_HomeView {
     }()
     
     static let enterSensorCode: String = {
-        return NSLocalizedString("enterSensorCode", tableName: filename, bundle: Bundle.main, value: "if you don't have a sensor code use 0000 but be aware that you will not get readings until you calibrate", comment: "When user needs to enter sensor code, to start firefly sensor")
+        return NSLocalizedString("enterSensorCode", tableName: filename, bundle: Bundle.main, value: "If you don't know the sensor code use 0000 but be aware that you will need to manually calibrate before you get readings.", comment: "When user needs to enter sensor code, to start firefly sensor")
     }()
     
     static let stopSensorConfirmation: String = {
